@@ -1,0 +1,17 @@
+app-name: project-template
+prefix: melschell
+tags:
+  ApplicationOwner: 'dschellberg@gmail.com'
+  ApplicationID: 'ProjectTemplate'
+  AppName: 'projecttemplate'
+  Namespace: 'melschell'
+  TagEnvironment: ${env DEPLOY_ENVIRONMENT}
+  TagApplicationOwner: ${var tags.ApplicationOwner}
+  TagAppName: ${var tags.AppName}
+
+sendEmail:
+  handler: src/lambdas/
+
+serverless:
+  map:
+    dev: 'dev'

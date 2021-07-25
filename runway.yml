@@ -1,0 +1,15 @@
+
+deployments:
+  - modules:
+      - name: frontend
+        path: frontend
+        parameters:
+          namespace: ${var prefix}-${var app-name}-${env DEPLOY_ENVIRONMENT}
+          cfngin_bucket: ${var prefix}-${var app-name}-deployment-bucket
+          environment: ${env DEPLOY_ENVIRONMENT}
+          appname: ${var app-name}
+          prefix: ${var prefix}
+
+    regions:
+      - us-east-1
+
