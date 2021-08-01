@@ -1,0 +1,50 @@
+Description: Static Website - Bucket
+
+Parameters:
+  pPrefix:
+    Description: Naming Root for Group, such as [ carrier-digital ].
+    Type: String
+  pAppName:
+    Description: Name of App, such as Verge, IoT, Celsius.
+    Type: String
+  pEnvironment:
+    Description: AWS App tier, such as Dev, Preprod, Prod.
+    Type: String
+
+Resources:
+  AllowCFAccess:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: Bucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ''
+                  - - !GetAtt Bucket.Arn
+                    - "/*"
+            Principal: "*"
+        Version: '2012-10-17'
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${pPrefix}-${pAppName}-${pEnvironment}-website'
+      AccessControl: PublicRead
+      LifecycleConfiguration:
+        Rules:
+          - NoncurrentVersionExpirationInDays: 90
+            Status: Enabled
+      VersioningConfiguration:
+        Status: Enabled
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+Outputs:
+  WebsiteBucketName:
+    Description: Name of website bucket
+    Value:
+      Ref: Bucket
