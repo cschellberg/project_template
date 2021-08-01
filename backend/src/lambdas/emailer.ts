@@ -19,7 +19,6 @@ export const sendEmail = async (event: APIGatewayEvent): Promise<APIGatewayProxy
             },
             Source: emailObj.email
         };
-        console.log(JSON.stringify(command));
         const sesResponse = await simpleEmailService.sendEmail(command);
         const response: APIGatewayProxyResult = {
             statusCode: 200,
