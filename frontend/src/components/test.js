@@ -3,7 +3,7 @@ import {Col, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../redux/reducers/users/usersActions'
 
-
+console.log("2222 "+process.env.REACT_APP_BACKEND_URL);
 
 function Test () {
 
@@ -28,6 +28,7 @@ function Test () {
     if ( ! users ){
         users=[];
     }
+
 
     return (
         <table >

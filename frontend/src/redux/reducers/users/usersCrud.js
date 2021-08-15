@@ -1,14 +1,39 @@
+import {getBackendClient} from "../../../utils/apollo/backendClient";
+import gql from 'graphql-tag';
+
+const backendClient=getBackendClient();
+
 export const fetchUsers = async () => {
-    return {
-                data: [{
-                    firstName: "donald",
-                    lastName: "schellberg",
-                    email: "dschellberg@gmail.com"
-                }, {
-                    firstName: "stephanie",
-                    lastName: "schellberg",
-                    email: "stephschell123@gmail.com"
-                }
-                ]
+    const usersQuery=gql`
+    query getUsers(){
+      getUsers(){
+      user{
+      firstName
+      lastName
+      email
+      }
+      }
     }
+    `
+    return backendClient.query({
+        query: usersQuery
+    })
+}
+
+export const addUser = async(user)=>{
+    const addUserMutation= gql `
+    mutation addUser($user: UserInput){
+    addUser(input: $user){
+        firstName
+        lastName
+        email
+    }
+    }
+    `
+    backendClient.mutate({
+        mutation: addUserMutation,
+        variables:{
+            user:user
+        }
+    })
 }

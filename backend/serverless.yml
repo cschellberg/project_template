@@ -74,7 +74,10 @@ provider:
       Action:
         - ses:*
       Resource: "*"
-
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: "*"
 
 # you can define service wide environment variables here
   environment:
@@ -102,7 +105,19 @@ functions:
       - httpApi:
           method: POST
           path: /post/email
-
+    tags:
+      FunctionName: sendEmail
+      Owner: MelSchell
+      
+  graphql:
+    handler: src/lambdas/graphql.graphqlHandler
+    events:
+      - httpApi:
+          method: post
+          path: /graphql
+      - httpApi:
+          method: get
+          path: /graphql
     tags:
       FunctionName: sendEmail
       Owner: MelSchell
@@ -140,11 +155,48 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#
+resources:
+  Resources:
+    BackendTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: backend-data-${self:provider.stage}
+        ProvisionedThroughput:
+          ReadCapacityUnits: "1"
+          WriteCapacityUnits: "1"
+        AttributeDefinitions:
+          -
+            AttributeName: 'pk'
+            AttributeType: 'S'
+          -
+            AttributeName: 'sk'
+            AttributeType: 'S'
+        KeySchema:
+          -
+            AttributeName: 'pk'
+            KeyType: 'HASH'
+          -
+            AttributeName: 'sk'
+            KeyType: 'RANGE'
+        GlobalSecondaryIndexes:
+          -
+            IndexName: sort_key_index
+            KeySchema:
+              -
+                AttributeName: 'sk'
+                KeyType: 'HASH'
+              -
+                AttributeName: 'pk'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: 'ALL'
+            ProvisionedThroughput:
+              ReadCapacityUnits: "1"
+              WriteCapacityUnits: "1"
+
+
+
+
+
+
 

@@ -12,7 +12,10 @@ import Test from './components/test';
 import { Provider }  from 'react-redux';
 import store  from './redux/store'
 
+require('dotenv').config();
+
 function App() {
+    const path = require('path')
   return (
       <Provider store={store}>
       <Router>

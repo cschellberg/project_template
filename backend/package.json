@@ -4,9 +4,16 @@
   "private": true,
   "dependencies": {
     "@aws-sdk/client-ses": "^3.23.0",
-    "aws-lambda": "^1.0.6",
+    "@sailplane/injector": "^1.0.2",
+    "@sailplane/logger": "^3.0.0",
+    "@types/aws-lambda": "^8.10.34",
     "@types/node": "^16.4.2",
-    "@types/aws-lambda": "^8.10.34"
+    "apollo-server": "^3.1.2",
+    "apollo-server-lambda": "^3.1.2",
+    "aws-lambda": "^1.0.6",
+    "bottlejs": "^2.0.0",
+    "graphql": "^15.5.1",
+    "graphql-tools": "^7.0.2"
   },
   "scripts": {
     "test": "jest test"
