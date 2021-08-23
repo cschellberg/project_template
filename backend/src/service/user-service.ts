@@ -6,6 +6,10 @@ import {User} from "../models/user/user-models"
 export class UserService {
     constructor(private readonly userRepository:UserRepository){}
 
+    async deleteUser(id:string):Promise<void>{
+        await this.userRepository.deleteUser(id);
+    }
+
     async addUser(user:User):Promise<void>{
         await this.userRepository.addUser(user);
     }

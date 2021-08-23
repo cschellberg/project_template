@@ -29,6 +29,7 @@ const resolvers = {
     },
     Mutation:{
         addUser:(user:User)=>userService.addUser(user),
+        deleteUser:(id:string )=>userService.deleteUser(id),
     }
 };
 
