@@ -10,7 +10,6 @@ import {
     QueryCommandOutput
 } from "@aws-sdk/client-dynamodb";
 import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
-import { v4 as uuidv4 } from 'uuid';
 
 const options = {
     region: process.env.region || "us-east-1"
@@ -22,14 +21,14 @@ export class UserRepository {
     constructor(private readonly envConfig: EnvConfig) {
     }
 
-    async deleteUser(id: string|undefined): Promise<User | null> {
-        if ( !id ){
+    async deleteUser(email: string|undefined): Promise<User | null> {
+        if ( !email ){
             return null;
         }
         const deleteItemInput: DeleteItemCommandInput = {
             TableName: this.envConfig.backendTableName(),
             Key: {
-                pk: {S: `USER|${id}`},
+                pk: {S: `USER|${email}`},
                 sk: {S: 'USER'}
             }
         }
@@ -50,7 +49,7 @@ export class UserRepository {
     async addUser(user: User): Promise<User | null> {
         const dbUser={
             ...user,
-            pk:`USER|${uuidv4()}`,
+            pk:`USER|${user.email}`,
             sk:'USER'
         }
         const putItemInput: PutItemInput = {
@@ -75,6 +74,7 @@ export class UserRepository {
     async getUsers(): Promise<Array<User>> {
         const queryInput: QueryCommandInput = {
             TableName: this.envConfig.backendTableName(),
+            IndexName: "sort_key_index",
             KeyConditionExpression: 'begins_with(pk,:pk) and  sk = :sk',
             ExpressionAttributeValues: {
                 ':sk': {S: 'USER'},

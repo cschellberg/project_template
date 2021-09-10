@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "es5",
     "lib": [
       "es2019",
       "dom"
@@ -9,14 +8,13 @@
     "plugins": [
       {
         "transform": "typescript-transform-paths",
-      "afterDeclarations": true
+        "afterDeclarations": true
       }
     ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

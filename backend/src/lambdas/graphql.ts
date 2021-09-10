@@ -1,52 +1,73 @@
 import {UserService} from '../service/user-service'
 import {ApolloServer, gql}  from 'apollo-server-lambda';
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import {Injector} from "@sailplane/injector";
-import {User} from "../models/user/user-models";
+import {APIGatewayProxyCallback, APIGatewayProxyEvent, Context} from "aws-lambda";
 
 const userService=Injector.get<UserService>(UserService);
-if ( !userService){
-    throw new Error("Unable to load up user service");
-}
+
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
-    type User {
+type User {
     firstName: String
     lastName: String
     email: String
-    id?: String
 },
-  type Query {
-    users: [User]
-  }
-`;
+input UserInput {
+    firstName: String
+    lastName: String
+    email: String
+},
+type Query {
+    getUsers: [User]
+},
+type Mutation {
+    addUser(user: UserInput):String
+    deleteUser(email: String):String
+}`;
+
 
 // Provide resolver functions for your schema fields
 const resolvers = {
-
     Query: {
-        users: () => userService.getUsers(),
+        getUsers: () => {return userService.getUsers()},
     },
     Mutation:{
-        addUser:(user:User)=>userService.addUser(user),
-        deleteUser:(id:string )=>userService.deleteUser(id),
+        addUser:(_parent:any, variables:any)=>userService.addUser(variables?.user),
+        deleteUser:(_parent:any, variables:any )=>userService.deleteUser(variables?.email)
     }
 };
 
+// Construct a schema, using GraphQL schema language
+console.log("good up to here 1");
+let tmpServer;
+try {
+    tmpServer = new ApolloServer({
+        typeDefs,
+        resolvers,
+        formatError: (error) => {
+            console.log(`GQL error ${error}`);
+            return error;
+        }
+    });
+}catch(err){
+    console.log(`Unable to initialize server because ${err}`)
+}
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+export const server=tmpServer;
 
-    // By default, the GraphQL Playground interface and GraphQL introspection
-    // is disabled in "production" (i.e. when `process.env.NODE_ENV` is `production`).
-    //
-    // If you'd like to have GraphQL Playground and introspection enabled in production,
-    // install the Playground plugin and set the `introspection` option explicitly to `true`.
-    introspection: true,
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-});
+console.log("good up to here 2");
+const apolloServerHandler=server.createHandler();
 
+exports.graphqlHandler = (
+    event: APIGatewayProxyEvent,
+    context: Context,
+    callback: APIGatewayProxyCallback
+): void => {
+    console.log('EVENT',JSON.stringify(event));
+    try {
+        apolloServerHandler(event, context, callback);
+    }catch(err){
+        console.log(`Error handling gql request ${err}`);
+    }
+};
 
-
-exports.graphqlHandler = server.createHandler();

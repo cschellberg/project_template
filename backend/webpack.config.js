@@ -1,7 +1,6 @@
 const path = require('path');
 const slsw = require('serverless-webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
@@ -19,17 +18,9 @@ module.exports = {
         alias: {
             '@': path.join(__dirname, '../../lib')
         },
-        extensions: ['.json', '.js', '.jsx', '.json', '.ts', '.tsx'],
+        extensions: ['.js', '.jsx', '.json','.ts', '.tsx'],
     },
     plugins: [
-       /* new CopyPlugin({
-            patterns: [
-                {
-                    // copy the handlebar templates
-                    //from: 'message/ ** / *.hbs'
-                }
-            ]
-        })*/
     ],
     output: {
         libraryTarget: 'commonjs',
@@ -48,7 +39,7 @@ module.exports = {
                     __dirname,
                     // path.join(__dirname, '../../../src/lib')
                 ],
-                exclude: /node_modules\/(?!(dhp)\/).*/
+                exclude: [/node_modules\/(?!(dhp)\/).*/,/test\/.*/]
             },
         ],
     },
