@@ -44,13 +44,10 @@ try {
     tmpServer = new ApolloServer({
         typeDefs,
         resolvers,
-        formatError: (error) => {
-            console.log(`GQL error ${error}`);
-            return error;
-        }
+        debug:true
     });
 }catch(err){
-    console.log(`Unable to initialize server because ${err}`)
+    console.log(`Unable to initialize server because ${err} \n ${err.stack}`)
 }
 
 export const server=tmpServer;

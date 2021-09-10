@@ -52,4 +52,9 @@ describe("graphql test", () => {
         }
         console.log("finished successfully ");
     });
+
+    it("graphql initialization test", async () => {
+        const handler=server.createHandler();
+        expect(handler).toBeTruthy();
+    });
 });

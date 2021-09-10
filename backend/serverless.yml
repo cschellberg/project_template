@@ -108,19 +108,48 @@ functions:
     tags:
       FunctionName: sendEmail
       Owner: MelSchell
-      
-  graphql:
-    handler: src/lambdas/graphql.graphqlHandler
+
+  getUsers:
+    handler: src/lambdas/user-handler.getUsers
     events:
       - httpApi:
-          method: post
-          path: /graphql
-      - httpApi:
           method: get
-          path: /graphql
+          path: /users
     tags:
-      FunctionName: sendEmail
+      FunctionName: getUsers
       Owner: MelSchell
+
+  addUser:
+    handler: src/lambdas/user-handler.addUser
+    events:
+      - httpApi:
+          method: put
+          path: /users
+    tags:
+      FunctionName: addUser
+      Owner: MelSchell
+
+  deleteUser:
+    handler: src/lambdas/user-handler.deleteUser
+    events:
+      - httpApi:
+          method: delete
+          path: /users/{email}
+    tags:
+      FunctionName: addUser
+      Owner: MelSchell
+#  graphql:
+#    handler: src/lambdas/graphql.graphqlHandler
+#    events:
+#      - httpApi:
+#          method: post
+#          path: /graphql
+#      - httpApi:
+#          method: get
+#          path: /graphql
+#    tags:
+#      FunctionName: sendEmail
+#      Owner: MelSchell
 
 resources:
   Resources:

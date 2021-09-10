@@ -3,7 +3,7 @@ const slsw = require('serverless-webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
-    mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
+    mode: 'production',
     optimization: {
         // We no not want to minimize our code at this point.
         minimize: false
